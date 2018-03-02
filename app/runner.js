@@ -1,5 +1,6 @@
-let Card = require('./models/card');
-let Hand = require('./models/hand');
+const Card = require('./models/card');
+const Hand = require('./models/hand');
+
 
 let aceCard = new Card('A', '♦');
 let faceCard = new Card('K', '♣');

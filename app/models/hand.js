@@ -1,4 +1,4 @@
-let Card = require('./card');
+const Card = require('./card');
 
 class Hand {
   constructor(cards) {
