@@ -16,11 +16,29 @@ class Deck {
         cards.push(card);
       });
     });
-    return cards;
+    if (this.cards != []) {
+      return cards;
+    }
+    else {
+      this.cards = cards;
+    }
   }
 
   shuffle() {
-    //Fisher-Yates Shuffle Here
+    //Fisher–Yates Shuffle
+    let cards = this.cards;
+    let lastIndex = cards.length - 1;
+    let randomIndex;
+    let currentLastCard;
+
+    while(lastIndex >= 0) {
+      randomIndex = Math.floor(Math.random() * lastIndex);
+      currentLastCard = cards[lastIndex];
+      cards[lastIndex] = cards[randomIndex];
+      cards[randomIndex] = currentLastCard;
+      lastIndex--;
+    }
+    this.cards = cards;
   }
 
   deal(num) {
