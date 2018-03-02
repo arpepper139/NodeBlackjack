@@ -16,20 +16,14 @@ class Hand {
   }
 
   highAceCheck(aceCount, baseTotal) {
-    let total;
-    if (aceCount > 0 && baseTotal < 12) {
-      total = baseTotal + 10;
-    }
-    else {
-      total = baseTotal;
-    }
-    return total;
+    return (aceCount > 0 && baseTotal < 12) ? true : false;
   }
 
   value() {
     let cards = this.cards;
     let baseTotal = cards.reduce((acc, card) => acc + card.baseValue(), 0);
-    let value = this.highAceCheck(this.aceCount(), baseTotal);
+    let highAce = this.highAceCheck(this.aceCount(), baseTotal);
+    let value = highAce ? (baseTotal + 10) : baseTotal
     return value;
   }
 }
