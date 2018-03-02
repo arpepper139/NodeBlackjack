@@ -1,3 +1,5 @@
+let Card = require('../../app/models/card');
+
 describe('Card', () => {
   let aceCard,
   faceCard,
@@ -17,17 +19,17 @@ describe('Card', () => {
     });
   });
 
-  describe('#initialValue()', () => {
+  describe('#baseValue()', () => {
     it('returns 1 for ace cards', () => {
-      expect(aceCard.initialValue()).toEqual(1);
+      expect(aceCard.baseValue()).toEqual(1);
     });
 
     it('returns 10 for face cards', () => {
-      expect(faceCard.initialValue()).toEqual(10);
+      expect(faceCard.baseValue()).toEqual(10);
     });
 
     it('returns the numerical value of number cards', () => {
-      expect(numberCard.initialValue()).toEqual(8);
+      expect(numberCard.baseValue()).toEqual(8);
     });
   });
 });
