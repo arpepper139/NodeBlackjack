@@ -4,7 +4,7 @@ class Card {
     this.suit = suit;
   }
 
-  initialValue() {
+  baseValue() {
     if (this.rank === 'A') {
       return 1;
     }
