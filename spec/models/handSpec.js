@@ -47,7 +47,9 @@ describe('Hand', () => {
 
   describe('highAceCheck()', () => {
     it('checks if the base total is less than 12, and makes one ace high if so', () => {
-      expect()
+      expect(noAceHand.highAceCheck(0, 18)).toEqual(false);
+      expect(perfectHand.highAceCheck(1, 11)).toEqual(true);
+      expect(twoAceHand.highAceCheck(2, 20)).toEqual(false);
     })
   });
 
