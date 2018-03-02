@@ -1,4 +1,4 @@
-let Card = require('../../app/models/card');
+const Card = require('../../app/models/card');
 
 describe('Card', () => {
   let aceCard,

@@ -1,5 +1,5 @@
-let Card = require('../../app/models/card');
-let Hand = require('../../app/models/hand');
+const Card = require('../../app/models/card');
+const Hand = require('../../app/models/hand');
 
 describe('Hand', () => {
   let aceCard,
@@ -30,14 +30,14 @@ describe('Hand', () => {
     });
   });
 
-  describe('hit()', () => {
+  describe('#hit()', () => {
     it('takes a card and adds it to the hand', () => {
       noAceHand.hit(aceCard);
       expect(noAceHand.cards.length).toEqual(3);
     });
   });
 
-  describe('aceCount()', () => {
+  describe('#aceCount()', () => {
     it('returns the number of aces in the hand', () => {
       expect(noAceHand.aceCount()).toEqual(0);
       expect(oneAceHand.aceCount()).toEqual(1);
@@ -45,7 +45,7 @@ describe('Hand', () => {
     });
   });
 
-  describe('highAceCheck()', () => {
+  describe('#highAceCheck()', () => {
     it('checks if the base total is less than 12, and makes one ace high if so', () => {
       expect(noAceHand.highAceCheck(0, 18)).toEqual(false);
       expect(perfectHand.highAceCheck(1, 11)).toEqual(true);
@@ -53,7 +53,7 @@ describe('Hand', () => {
     })
   });
 
-  describe('value()', () => {
+  describe('#value()', () => {
     it('returns the value of the hand', () => {
       expect(noAceHand.value()).toEqual(18);
       expect(oneAceHand.value()).toEqual(19);
