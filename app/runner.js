@@ -46,8 +46,8 @@ determineWinner = (playerHand, computerHand) => {
 
 playBlackjack = (playerHand, computerHand) => {
   rl.question('\nHit or stand? (h/s)> ', (answer) => {
-    let choice = answer.trim().toLowerCase();
-    if (choice === 'h') {
+    let playerChoice = answer.trim().toLowerCase();
+    if (playerChoice === 'h') {
       hit('You', playerHand);
       if (playerHand.value() <= 21) {
         playBlackjack(playerHand, computerHand);
@@ -57,7 +57,7 @@ playBlackjack = (playerHand, computerHand) => {
         rl.close();
       }
     }
-    else if (choice === 's') {
+    else if (playerChoice === 's') {
       console.log(initialHandInfo('Dealer\'s', computerHand));
       while (computerHand.value() < 17) {
         hit('Dealer', computerHand);
@@ -66,13 +66,12 @@ playBlackjack = (playerHand, computerHand) => {
       rl.close();
     }
     else {
-      console.log('Sorry! You can only hit or stand.\n');
+      console.log('\nSorry! You can only hit or stand.');
       playBlackjack(playerHand, computerHand);
     }
   });
 };
 
-//Game
 const deck = new Deck();
 deck.shuffle();
 
