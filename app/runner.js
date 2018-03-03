@@ -1,12 +1,12 @@
+const Hand = require('./models/hand');
+const Deck = require('./models/deck');
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
-const Hand = require('./models/hand');
-const Deck = require('./models/deck');
 
 initialHandInfo = (owner, hand) => {
   let infoString = '';
@@ -18,7 +18,7 @@ initialHandInfo = (owner, hand) => {
 
 playBlackjack = (playerHand, computerHand) => {
   rl.question('Hit or stand? (h/s)> ', (answer) => {
-    choice = answer.trim().toLowerCase();
+    let choice = answer.trim().toLowerCase();
     if (choice === 'h') {
       playerHits(playerHand, computerHand);
     }
@@ -37,53 +37,49 @@ playBlackjack = (playerHand, computerHand) => {
   });
 };
 
+updatedHandInfo = (owner, card, hand) => {
+  const verb = `${ (owner === 'You') ? 'were' : 'was' }`;
+  const possessive = `${ (owner === 'You') ? 'Your' : 'Dealer\'s' }`;
+  let newInfoString = '';
+  newInfoString += `${owner} ${verb} dealt ${card.rank}${card.suit}\n`;
+  newInfoString += `${possessive} Score: ${hand.value()}`;
+  return newInfoString;
+};
+
 playerHits = (playerHand, computerHand) => {
   let newPlayerCard = deck.deal(1)[0];
   playerHand.hit(newPlayerCard);
+  console.log(updatedHandInfo('You', newPlayerCard, playerHand));
   if (playerHand.value() <= 21) {
-    promptAgain(newPlayerCard, playerHand, computerHand);
+    playBlackjack(playerHand, computerHand);
   }
   else {
-    playerBusts(newPlayerCard, playerHand);
+    console.log('Bust: You lose.');
+    rl.close();
   }
-}
-
-promptAgain = (newPlayerCard, playerHand, computerHand) => {
-  console.log(`You were dealt ${newPlayerCard.rank}${newPlayerCard.suit}`);
-  console.log(`Score: ${playerHand.value()}`);
-  playBlackjack(playerHand, computerHand);
-}
-
-playerBusts = (newPlayerCard, playerHand) => {
-  console.log(`You were dealt ${newPlayerCard.rank}${newPlayerCard.suit}`);
-  console.log(`Score: ${playerHand.value()}`);
-  console.log('Bust: You lose.');
-  rl.close();
-}
+};
 
 computerHits = (computerHand) => {
   let newComputerCard = deck.deal(1)[0];
   computerHand.hit(newComputerCard);
-  console.log(`Dealer was dealt ${newComputerCard.rank}${newComputerCard.suit}`);
-  console.log(`Dealer Score: ${computerHand.value()}`);
-}
+  console.log(updatedHandInfo('Dealer', newComputerCard, computerHand));
+};
 
 determineWinner = (playerHand, computerHand) => {
   let playerScore = playerHand.value();
   let computerScore = computerHand.value();
   if (playerScore > computerScore || computerScore > 21) {
-    console.log('Congrats! You win!')
+    console.log('Congrats! You win!');
   }
   else if (playerScore === computerScore) {
-    console.log('Push!')
+    console.log('Push!');
   }
   else {
-    console.log('Dealer Wins.')
+    console.log('Dealer Wins.');
   }
 };
 
 //Game
-
 const deck = new Deck();
 deck.shuffle();
 
