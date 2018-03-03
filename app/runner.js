@@ -1,72 +1,76 @@
-const readline = require('readline');
+const Hand = require('./models/hand');
+const Deck = require('./models/deck');
 
+const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-const Hand = require('./models/hand');
-const Deck = require('./models/deck');
-
-initialHandInfo = (player, hand) => {
+initialHandInfo = (owner, hand) => {
   let infoString = '';
-  infoString += `${player} first card: ${hand.cards[0].rank}${hand.cards[0].suit}\n`;
-  infoString += `${player} second card: ${hand.cards[1].rank}${hand.cards[1].suit}\n`;
-  infoString += `${player} Score: ${hand.value()}\n`;
+  infoString += `\n${owner} first card: ${hand.cards[0].rank}${hand.cards[0].suit}\n`;
+  infoString += `${owner} second card: ${hand.cards[1].rank}${hand.cards[1].suit}\n`;
+  infoString += `${owner} Score: ${hand.value()}`;
   return infoString;
 };
 
+hit = (owner, hand) => {
+  const newCard = deck.deal(1)[0];
+  hand.hit(newCard);
+  console.log(updatedHandInfo(owner, newCard, hand));
+};
+
+updatedHandInfo = (owner, card, hand) => {
+  const verb = `${ (owner === 'You') ? 'were' : 'was' }`;
+  const possessive = `${ (owner === 'You') ? 'Your' : 'Dealer\'s' }`;
+  let newInfoString = '';
+  newInfoString += `\n${owner} ${verb} dealt ${card.rank}${card.suit}\n`;
+  newInfoString += `${possessive} Score: ${hand.value()}`;
+  return newInfoString;
+};
+
 determineWinner = (playerHand, computerHand) => {
-  let playerScore = playerHand.value();
-  let computerScore = computerHand.value();
+  const playerScore = playerHand.value();
+  const computerScore = computerHand.value();
   if (playerScore > computerScore || computerScore > 21) {
-    console.log('Congrats! You win!')
+    console.log('\nCongrats! You win!');
   }
   else if (playerScore === computerScore) {
-    console.log('Push!')
+    console.log('\nPush!');
   }
   else {
-    console.log('Dealer Wins.')
+    console.log('\nDealer Wins.');
   }
 };
 
 playBlackjack = (playerHand, computerHand) => {
-  rl.question('Hit or stand? (h/s)> ', (answer) => {
-    choice = answer.trim().toLowerCase();
-    if (choice === 'h') {
-      let newPlayerCard = deck.deal(1)[0];
-      playerHand.hit(newPlayerCard);
+  rl.question('\nHit or stand? (h/s)> ', (answer) => {
+    let playerChoice = answer.trim().toLowerCase();
+    if (playerChoice === 'h') {
+      hit('You', playerHand);
       if (playerHand.value() <= 21) {
-        console.log(`You were dealt ${newPlayerCard.rank}${newPlayerCard.suit}`);
-        console.log(`Score: ${playerHand.value()}`);
         playBlackjack(playerHand, computerHand);
       }
       else {
-        console.log(`You were dealt ${newPlayerCard.rank}${newPlayerCard.suit}`);
-        console.log(`Score: ${playerHand.value()}`);
-        console.log('Bust: You lose.');
+        console.log('\nBust: You lose.');
         rl.close();
       }
     }
-    else if (choice === 's') {
+    else if (playerChoice === 's') {
       console.log(initialHandInfo('Dealer\'s', computerHand));
       while (computerHand.value() < 17) {
-        let newComputerCard = deck.deal(1)[0];
-        computerHand.hit(newComputerCard);
-        console.log(`Dealer was dealt ${newComputerCard.rank}${newComputerCard.suit}`);
-        console.log(`Dealer Score: ${computerHand.value()}`);
+        hit('Dealer', computerHand);
       }
       determineWinner(playerHand, computerHand);
       rl.close();
     }
     else {
-      console.log('Sorry! You can only hit or stand.\n');
+      console.log('\nSorry! You can only hit or stand.');
       playBlackjack(playerHand, computerHand);
     }
   });
 };
-
-//Game
 
 const deck = new Deck();
 deck.shuffle();
