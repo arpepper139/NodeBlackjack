@@ -7,6 +7,9 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+const cyan = '\x1b[36m%s\x1b[0m';
+const magenta = '\x1b[35m%s\x1b[0m';
+
 initialHandInfo = (owner, hand) => {
   let infoString = '';
   infoString += `\n${owner} first card: ${hand.cards[0].rank}${hand.cards[0].suit}\n`;
@@ -17,8 +20,9 @@ initialHandInfo = (owner, hand) => {
 
 hit = (owner, hand) => {
   const newCard = deck.deal(1)[0];
+  const color = `${owner === 'You' ? cyan : magenta}`;
   hand.hit(newCard);
-  console.log(updatedHandInfo(owner, newCard, hand));
+  console.log(color, updatedHandInfo(owner, newCard, hand));
 };
 
 updatedHandInfo = (owner, card, hand) => {
@@ -34,31 +38,32 @@ determineWinner = (playerHand, computerHand) => {
   const playerScore = playerHand.value();
   const computerScore = computerHand.value();
   if (playerScore > computerScore || computerScore > 21) {
-    console.log('\nCongrats! You win!');
+    console.log(cyan, '\nCongrats! You win!');
   }
   else if (playerScore === computerScore) {
     console.log('\nPush!');
   }
   else {
-    console.log('\nDealer Wins.');
+    console.log(magenta, '\nDealer Wins.');
   }
 };
 
 playBlackjack = (playerHand, computerHand) => {
-  rl.question('\nHit or stand? (h/s)> ', (answer) => {
-    let playerChoice = answer.trim().toLowerCase();
+  const prompt = '\nHit or stand? (h/s)> ';
+  rl.question(prompt, (answer) => {
+    const playerChoice = answer.trim().toLowerCase();
     if (playerChoice === 'h') {
       hit('You', playerHand);
       if (playerHand.value() <= 21) {
         playBlackjack(playerHand, computerHand);
       }
       else {
-        console.log('\nBust: You lose.');
+        console.log(magenta, '\nBust: You lose.');
         rl.close();
       }
     }
     else if (playerChoice === 's') {
-      console.log(initialHandInfo('Dealer\'s', computerHand));
+      console.log(magenta, initialHandInfo('Dealer\'s', computerHand));
       while (computerHand.value() < 17) {
         hit('Dealer', computerHand);
       }
@@ -79,5 +84,5 @@ const playerHand = new Hand(deck.deal(2));
 const computerHand = new Hand(deck.deal(2));
 
 console.log(`Welcome! Let's play blackjack!`);
-console.log(initialHandInfo('Your', playerHand));
+console.log(cyan, initialHandInfo('Your', playerHand));
 playBlackjack(playerHand, computerHand);
