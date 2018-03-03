@@ -40,9 +40,9 @@ describe('Deck', () => {
 
   describe('#deal()', () => {
     it('deals the specified number of cards', () => {
-      const Cards = deck.deal(2);
+      const cards = deck.deal(2);
       expect(deck.cards.length).toEqual(50);
-      expect(Cards[0]).toEqual(jasmine.any(Card));
+      expect(cards[0]).toEqual(jasmine.any(Card));
     });
   });
 });

@@ -1,5 +1,5 @@
 # Node Blackjack
 
-A basic command line blackjack application built in Javascript, utilizing Node.js. Currently in development.
+My first Javascript/Node command line application. Game is up and running but remains in development.
 
-To play enter `node app/runner.js` in the command line.
+To play either enter `node app/runner.js` or `npm start` in the command line.
