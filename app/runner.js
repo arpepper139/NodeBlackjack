@@ -2,7 +2,6 @@ const Hand = require('./models/hand');
 const Deck = require('./models/deck');
 
 const readline = require('readline');
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -20,12 +19,19 @@ playBlackjack = (playerHand, computerHand) => {
   rl.question('Hit or stand? (h/s)> ', (answer) => {
     let choice = answer.trim().toLowerCase();
     if (choice === 'h') {
-      playerHits(playerHand, computerHand);
+      hit('You', playerHand);
+      if (playerHand.value() <= 21) {
+        playBlackjack(playerHand, computerHand);
+      }
+      else {
+        console.log('Bust: You lose.');
+        rl.close();
+      }
     }
     else if (choice === 's') {
       console.log(initialHandInfo('Dealer\'s', computerHand));
       while (computerHand.value() < 17) {
-        computerHits(computerHand);
+        hit('Dealer', computerHand);
       }
       determineWinner(playerHand, computerHand);
       rl.close();
@@ -46,28 +52,15 @@ updatedHandInfo = (owner, card, hand) => {
   return newInfoString;
 };
 
-playerHits = (playerHand, computerHand) => {
-  let newPlayerCard = deck.deal(1)[0];
-  playerHand.hit(newPlayerCard);
-  console.log(updatedHandInfo('You', newPlayerCard, playerHand));
-  if (playerHand.value() <= 21) {
-    playBlackjack(playerHand, computerHand);
-  }
-  else {
-    console.log('Bust: You lose.');
-    rl.close();
-  }
-};
-
-computerHits = (computerHand) => {
-  let newComputerCard = deck.deal(1)[0];
-  computerHand.hit(newComputerCard);
-  console.log(updatedHandInfo('Dealer', newComputerCard, computerHand));
+hit = (owner, hand) => {
+  const newCard = deck.deal(1)[0];
+  hand.hit(newCard);
+  console.log(updatedHandInfo(owner, newCard, hand));
 };
 
 determineWinner = (playerHand, computerHand) => {
-  let playerScore = playerHand.value();
-  let computerScore = computerHand.value();
+  const playerScore = playerHand.value();
+  const computerScore = computerHand.value();
   if (playerScore > computerScore || computerScore > 21) {
     console.log('Congrats! You win!');
   }
