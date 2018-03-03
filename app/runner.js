@@ -10,9 +10,9 @@ const Deck = require('./models/deck');
 
 initialHandInfo = (player, hand) => {
   let infoString = '';
-  infoString += `${player} was dealt ${hand.cards[0].rank}${hand.cards[0].suit}\n`;
-  infoString += `${player} was dealt ${hand.cards[1].rank}${hand.cards[1].suit}\n`;
-  infoString += `${player}'s Score: ${hand.value()}\n`;
+  infoString += `${player} first card: ${hand.cards[0].rank}${hand.cards[0].suit}\n`;
+  infoString += `${player} second card: ${hand.cards[1].rank}${hand.cards[1].suit}\n`;
+  infoString += `${player} Score: ${hand.value()}\n`;
   return infoString;
 };
 
@@ -49,7 +49,7 @@ playBlackjack = (playerHand, computerHand) => {
       }
     }
     else if (choice === 's') {
-      console.log(initialHandInfo('Dealer', computerHand));
+      console.log(initialHandInfo('Dealer\'s', computerHand));
       while (computerHand.value() < 17) {
         let newComputerCard = deck.deal(1)[0];
         computerHand.hit(newComputerCard);
@@ -74,10 +74,6 @@ deck.shuffle();
 const playerHand = new Hand(deck.deal(2));
 const computerHand = new Hand(deck.deal(2));
 
-rl.question('What is your name?> ', (answer) => {
-  let name = answer.trim();
-  console.log(`Welcome ${name}! Let's play blackjack!`);
-  console.log(initialHandInfo(name, playerHand));
-
-  playBlackjack(playerHand, computerHand);
-});
+console.log(`Welcome! Let's play blackjack!`);
+console.log(initialHandInfo('Your', playerHand));
+playBlackjack(playerHand, computerHand);
